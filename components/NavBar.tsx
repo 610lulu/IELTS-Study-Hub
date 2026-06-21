@@ -6,55 +6,82 @@ import {
   BarChart3,
   BookOpenText,
   CalendarCheck,
+  LogOut,
   Mic2,
   PenLine,
+  Search,
   Sparkles,
 } from "lucide-react";
 
 const links = [
-  { href: "/", label: "Dashboard", icon: BarChart3 },
+  { href: "/", label: "Home", icon: BarChart3 },
   { href: "/vocabulary", label: "Vocabulary", icon: BookOpenText },
   { href: "/writing", label: "Writing", icon: PenLine },
   { href: "/speaking", label: "Speaking", icon: Mic2 },
-  { href: "/plan", label: "Study Plan", icon: CalendarCheck },
+  { href: "/plan", label: "Plan", icon: CalendarCheck },
 ];
+
+function isActive(pathname: string, href: string) {
+  if (href === "/") {
+    return pathname === "/";
+  }
+
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
 
 export function NavBar() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-white/88 backdrop-blur">
-      <div className="shell flex min-h-16 flex-col gap-3 py-3 md:flex-row md:items-center md:justify-between md:gap-6">
-        <Link href="/" className="flex items-center gap-3 font-black text-ink">
-          <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-sky text-white">
-            <Sparkles size={20} aria-hidden="true" />
+    <aside className="sidebar">
+      <div>
+        <Link href="/" className="flex items-center gap-3 text-ink no-underline">
+          <span className="brand-mark">
+            <Sparkles size={18} aria-hidden="true" />
           </span>
           <span className="leading-tight">
-            <span className="block text-lg">BandUp</span>
-            <span className="block text-xs font-bold text-muted">IELTS Study Hub</span>
+            <span className="block text-sm font-black">BandUp</span>
+            <span className="block text-[11px] font-bold text-muted">IELTS Hub</span>
           </span>
         </Link>
 
-        <nav className="flex gap-2 overflow-x-auto pb-1 md:pb-0" aria-label="Main navigation">
+        <div className="mt-8 hidden items-center gap-2 rounded-lg border border-line bg-white px-3 py-2 text-xs font-bold text-muted md:flex">
+          <Search size={14} aria-hidden="true" />
+          Focus today
+        </div>
+
+        <nav className="sidebar-nav mt-8 space-y-2" aria-label="Main navigation">
           {links.map(({ href, label, icon: Icon }) => {
-            const active = pathname === href;
+            const active = isActive(pathname, href);
             return (
               <Link
                 key={href}
                 href={href}
-                className={`flex min-h-10 shrink-0 items-center gap-2 rounded-lg border px-3 text-sm font-bold transition ${
-                  active
-                    ? "border-sky bg-sky text-white"
-                    : "border-transparent bg-white text-slate-600 hover:border-line hover:text-sky"
-                }`}
+                className={`nav-link ${active ? "nav-link-active" : ""}`}
               >
-                <Icon size={17} aria-hidden="true" />
+                <Icon size={16} aria-hidden="true" />
                 {label}
               </Link>
             );
           })}
         </nav>
       </div>
-    </header>
+
+      <div className="sidebar-footer space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-honey text-sm font-black text-ink">
+            A
+          </div>
+          <div className="min-w-0">
+            <p className="truncate text-xs font-black text-ink">Amanda</p>
+            <p className="truncate text-[11px] font-bold text-muted">Band 6.5 goal</p>
+          </div>
+        </div>
+        <button type="button" className="nav-link w-full justify-start">
+          <LogOut size={16} aria-hidden="true" />
+          Log out
+        </button>
+      </div>
+    </aside>
   );
 }

@@ -44,7 +44,15 @@ export function WritingEditor({ onSave }: WritingEditorProps) {
         setContent("");
       }}
     >
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="flex items-center justify-between gap-4">
+        <div>
+          <p className="eyebrow">Writing editor</p>
+          <h2 className="mt-1 text-2xl font-black text-ink">Draft a response</h2>
+        </div>
+        <span className="chip">{wordCount} words</span>
+      </div>
+
+      <div className="mt-5 grid gap-4 md:grid-cols-3">
         <label className="text-sm font-bold text-ink">
           Task
           <select
@@ -57,7 +65,7 @@ export function WritingEditor({ onSave }: WritingEditorProps) {
           </select>
         </label>
         <label className="text-sm font-bold text-ink md:col-span-2">
-          题型
+          Question type
           <select
             className="input mt-2"
             value={questionType}
@@ -71,7 +79,7 @@ export function WritingEditor({ onSave }: WritingEditorProps) {
       </div>
 
       <label className="mt-4 block text-sm font-bold text-ink">
-        题目
+        Prompt
         <input
           className="input mt-2"
           value={prompt}
@@ -81,7 +89,7 @@ export function WritingEditor({ onSave }: WritingEditorProps) {
       </label>
 
       <label className="mt-4 block text-sm font-bold text-ink">
-        作文
+        Essay
         <textarea
           className="input mt-2 min-h-72 resize-y leading-7"
           value={content}
@@ -90,11 +98,10 @@ export function WritingEditor({ onSave }: WritingEditorProps) {
         />
       </label>
 
-      <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <span className="text-sm font-bold text-muted">{wordCount} words</span>
+      <div className="mt-4 flex justify-end">
         <button type="submit" className="btn btn-primary">
           <Save size={18} aria-hidden="true" />
-          保存作文
+          Save essay
         </button>
       </div>
     </form>

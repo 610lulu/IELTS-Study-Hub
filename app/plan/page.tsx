@@ -51,10 +51,10 @@ export default function StudyPlanPage() {
 
   const planStats = useMemo(
     () => [
-      { label: "目标分数", value: plan.targetBand },
-      { label: "每天学习", value: `${plan.dailyMinutes} min` },
-      { label: "今日完成", value: `${completionRate}%` },
-      { label: "倒计时", value: remainingDays === null ? "--" : `${remainingDays} days` },
+      { label: "Target band", value: plan.targetBand },
+      { label: "Daily study", value: `${plan.dailyMinutes} min` },
+      { label: "Today done", value: `${completionRate}%` },
+      { label: "Days left", value: remainingDays === null ? "--" : `${remainingDays}` },
     ],
     [completionRate, plan.dailyMinutes, plan.targetBand, remainingDays],
   );
@@ -100,93 +100,98 @@ export default function StudyPlanPage() {
   }
 
   return (
-    <main className="shell py-6 md:py-8">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+    <main className="page-shell">
+      <header className="page-header">
         <div>
-          <p className="text-sm font-black uppercase text-sky">Study Plan</p>
-          <h1 className="mt-1 text-3xl font-black text-ink">学习计划</h1>
+          <p className="eyebrow">Study plan</p>
+          <h1 className="page-title">Plan board</h1>
+          <p className="page-subtitle">Set the exam target and keep today focused.</p>
         </div>
         <span className="chip">{todayKey()}</span>
-      </div>
+      </header>
 
-      <section className="mt-6 grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="space-y-5">
-          <form className="panel p-5" onSubmit={savePlan}>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <label className="text-sm font-bold text-ink">
-                当前分数
-                <input
-                  className="input mt-2"
-                  value={plan.currentBand}
-                  onChange={(event) => setPlan({ ...plan, currentBand: event.target.value })}
-                  placeholder="5.5"
-                />
-              </label>
-              <label className="text-sm font-bold text-ink">
-                目标分数
-                <input
-                  className="input mt-2"
-                  value={plan.targetBand}
-                  onChange={(event) => setPlan({ ...plan, targetBand: event.target.value })}
-                  placeholder="6.5"
-                />
-              </label>
-              <label className="text-sm font-bold text-ink">
-                考试日期
-                <input
-                  className="input mt-2"
-                  type="date"
-                  value={plan.examDate}
-                  onChange={(event) => setPlan({ ...plan, examDate: event.target.value })}
-                />
-              </label>
-              <label className="text-sm font-bold text-ink">
-                每天学习时长
-                <input
-                  className="input mt-2"
-                  type="number"
-                  min={15}
-                  step={15}
-                  value={plan.dailyMinutes}
-                  onChange={(event) =>
-                    setPlan({ ...plan, dailyMinutes: Number(event.target.value) })
-                  }
-                />
-              </label>
-            </div>
-            <label className="mt-4 block text-sm font-bold text-ink">
-              每周目标
-              <textarea
-                className="input mt-2 min-h-28 resize-y"
-                value={plan.weeklyGoal}
-                onChange={(event) => setPlan({ ...plan, weeklyGoal: event.target.value })}
+      <section className="mb-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {planStats.map((item) => (
+          <article key={item.label} className="metric">
+            <p className="metric-label">{item.label}</p>
+            <p className="metric-value">{item.value}</p>
+          </article>
+        ))}
+      </section>
+
+      <section className="grid gap-4 xl:grid-cols-[0.88fr_1.12fr]">
+        <form className="panel p-5" onSubmit={savePlan}>
+          <div>
+            <p className="eyebrow">Settings</p>
+            <h2 className="mt-1 text-xl font-black text-ink">Exam plan</h2>
+          </div>
+          <div className="mt-5 grid gap-4 sm:grid-cols-2">
+            <label className="text-sm font-bold text-ink">
+              Current band
+              <input
+                className="input mt-2"
+                value={plan.currentBand}
+                onChange={(event) => setPlan({ ...plan, currentBand: event.target.value })}
+                placeholder="5.5"
               />
             </label>
-            <div className="mt-4 flex justify-end">
-              <button type="submit" className="btn btn-primary">
-                <Save size={18} aria-hidden="true" />
-                保存计划
-              </button>
-            </div>
-          </form>
-
-          <div className="grid gap-3 sm:grid-cols-2">
-            {planStats.map((item) => (
-              <article key={item.label} className="rounded-lg border border-line bg-white p-4 shadow-soft">
-                <p className="text-sm font-bold text-muted">{item.label}</p>
-                <p className="mt-2 text-2xl font-black text-ink">{item.value}</p>
-              </article>
-            ))}
+            <label className="text-sm font-bold text-ink">
+              Target band
+              <input
+                className="input mt-2"
+                value={plan.targetBand}
+                onChange={(event) => setPlan({ ...plan, targetBand: event.target.value })}
+                placeholder="6.5"
+              />
+            </label>
+            <label className="text-sm font-bold text-ink">
+              Exam date
+              <input
+                className="input mt-2"
+                type="date"
+                value={plan.examDate}
+                onChange={(event) => setPlan({ ...plan, examDate: event.target.value })}
+              />
+            </label>
+            <label className="text-sm font-bold text-ink">
+              Daily minutes
+              <input
+                className="input mt-2"
+                type="number"
+                min={15}
+                step={15}
+                value={plan.dailyMinutes}
+                onChange={(event) =>
+                  setPlan({ ...plan, dailyMinutes: Number(event.target.value) })
+                }
+              />
+            </label>
           </div>
-        </div>
+          <label className="mt-4 block text-sm font-bold text-ink">
+            Weekly goal
+            <textarea
+              className="input mt-2 min-h-28 resize-y"
+              value={plan.weeklyGoal}
+              onChange={(event) => setPlan({ ...plan, weeklyGoal: event.target.value })}
+            />
+          </label>
+          <div className="mt-4 flex justify-end">
+            <button type="submit" className="btn btn-primary">
+              <Save size={18} aria-hidden="true" />
+              Save plan
+            </button>
+          </div>
+        </form>
 
         <div className="panel p-5">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-black text-ink">今日任务</p>
-              <p className="mt-1 text-sm font-semibold text-muted">{completed}/{tasks.length} completed</p>
+              <p className="eyebrow">Today tasks</p>
+              <h2 className="mt-1 text-xl font-black text-ink">{completed}/{tasks.length} completed</h2>
             </div>
-            <CalendarCheck className="text-aqua" size={24} aria-hidden="true" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-aqua/15 text-aqua">
+              <CalendarCheck size={22} aria-hidden="true" />
+            </div>
           </div>
 
           <form className="mt-5 grid gap-3 md:grid-cols-[1fr_150px_auto]" onSubmit={addTask}>
@@ -205,9 +210,9 @@ export default function StudyPlanPage() {
                 <option key={area}>{area}</option>
               ))}
             </select>
-            <button type="submit" className="btn btn-secondary">
+            <button type="submit" className="btn btn-accent">
               <Plus size={18} aria-hidden="true" />
-              添加
+              Add
             </button>
           </form>
 
@@ -217,10 +222,10 @@ export default function StudyPlanPage() {
 
           <button
             type="button"
-            className="mt-4 text-sm font-bold text-sky hover:text-ink"
+            className="mt-4 text-sm font-black text-ink underline decoration-honey decoration-2 underline-offset-4"
             onClick={resetTodayTasks}
           >
-            重新生成默认任务
+            Reset default tasks
           </button>
         </div>
       </section>

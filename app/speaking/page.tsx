@@ -10,7 +10,7 @@ import type { SpeakingPart, SpeakingPractice } from "@/types";
 const parts: SpeakingPart[] = ["Part 1", "Part 2", "Part 3"];
 
 function formatDate(value: string) {
-  return new Intl.DateTimeFormat("zh-CN", {
+  return new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
     hour: "2-digit",
@@ -58,16 +58,17 @@ export default function SpeakingPage() {
   }
 
   return (
-    <main className="shell py-6 md:py-8">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+    <main className="page-shell">
+      <header className="page-header">
         <div>
-          <p className="text-sm font-black uppercase text-sky">Speaking</p>
-          <h1 className="mt-1 text-3xl font-black text-ink">口语题库</h1>
+          <p className="eyebrow">Speaking</p>
+          <h1 className="page-title">Speaking lab</h1>
+          <p className="page-subtitle">Pick a part, answer under time pressure, and save your practice notes.</p>
         </div>
         <span className="chip">{records.length} practices</span>
-      </div>
+      </header>
 
-      <section className="mt-6 grid gap-5 lg:grid-cols-[1fr_0.9fr]">
+      <section className="grid gap-4 xl:grid-cols-[1fr_0.92fr]">
         <div className="panel p-5">
           <div className="flex flex-wrap gap-2">
             {parts.map((item) => (
@@ -82,17 +83,17 @@ export default function SpeakingPage() {
             ))}
           </div>
 
-          <div className="mt-5 rounded-lg border border-line bg-white p-5">
+          <div className="mt-5 panel-dark p-5">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-sm font-black text-sky">{part}</p>
-                <h2 className="mt-3 text-2xl font-black leading-8 text-ink">{question}</h2>
+                <p className="text-sm font-black text-honey">{part}</p>
+                <h2 className="mt-3 text-2xl font-black leading-8 text-white">{question}</h2>
               </div>
               <button
                 type="button"
-                className="icon-button shrink-0"
+                className="icon-button border-white/15 bg-white/10 text-white hover:border-honey"
                 aria-label="Random question"
-                title="随机抽题"
+                title="Random question"
                 onClick={() => setQuestion(getRandomQuestion(part))}
               >
                 <Shuffle size={18} />
@@ -102,13 +103,13 @@ export default function SpeakingPage() {
 
           {part === "Part 2" ? (
             <div className="mt-4 grid gap-4 md:grid-cols-2">
-              <Timer label="准备" seconds={60} />
-              <Timer label="回答" seconds={120} />
+              <Timer label="Preparation" seconds={60} />
+              <Timer label="Answer" seconds={120} />
             </div>
           ) : null}
 
           <label className="mt-5 block text-sm font-bold text-ink">
-            回答
+            Answer
             <textarea
               className="input mt-2 min-h-56 resize-y leading-7"
               value={answer}
@@ -120,7 +121,7 @@ export default function SpeakingPage() {
           <div className="mt-4 flex justify-end">
             <button type="button" className="btn btn-primary" onClick={saveAnswer}>
               <Save size={18} aria-hidden="true" />
-              保存回答
+              Save answer
             </button>
           </div>
         </div>
@@ -128,16 +129,18 @@ export default function SpeakingPage() {
         <div className="panel p-5">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-black text-ink">练习记录</p>
-              <p className="mt-1 text-sm font-semibold text-muted">Part 1 / Part 2 / Part 3</p>
+              <p className="eyebrow">Archive</p>
+              <h2 className="mt-1 text-xl font-black text-ink">Practice records</h2>
             </div>
-            <Mic2 className="text-honey" size={24} aria-hidden="true" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-honey/30 text-ink">
+              <Mic2 size={20} aria-hidden="true" />
+            </div>
           </div>
 
-          <div className="mt-5 space-y-4">
+          <div className="mt-5 space-y-3">
             {records.length > 0 ? (
               records.map((record) => (
-                <article key={record.id} className="rounded-lg border border-line bg-white p-4">
+                <article key={record.id} className="soft-row p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <span className="chip">{record.part}</span>
@@ -147,15 +150,15 @@ export default function SpeakingPage() {
                     </div>
                     <button
                       type="button"
-                      className="icon-button shrink-0"
-                      title="删除"
+                      className="icon-button"
+                      title="Delete practice"
                       aria-label="Delete speaking practice"
                       onClick={() => persist(records.filter((item) => item.id !== record.id))}
                     >
                       <Trash2 size={18} />
                     </button>
                   </div>
-                  <p className="mt-3 line-clamp-4 whitespace-pre-line text-sm leading-6 text-slate-700">
+                  <p className="mt-3 line-clamp-4 whitespace-pre-line text-sm font-semibold leading-6 text-muted">
                     {record.answer}
                   </p>
                   <span className="mt-4 flex items-center gap-2 text-xs font-bold text-muted">
@@ -166,7 +169,7 @@ export default function SpeakingPage() {
               ))
             ) : (
               <div className="rounded-lg border border-dashed border-line bg-white p-8 text-center text-sm font-bold text-muted">
-                暂无记录
+                No speaking records yet
               </div>
             )}
           </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, HelpCircle, RotateCcw } from "lucide-react";
+import { Check, HelpCircle, RotateCcw, Trash2 } from "lucide-react";
 import type { MasteryStatus, VocabularyWord } from "@/types";
 
 interface WordCardProps {
@@ -10,9 +10,9 @@ interface WordCardProps {
 }
 
 const statusLabels: Record<MasteryStatus, string> = {
-  unlearned: "未掌握",
-  fuzzy: "模糊",
-  mastered: "已掌握",
+  unlearned: "New",
+  fuzzy: "Review",
+  mastered: "Mastered",
 };
 
 const statusOptions: Array<{ value: MasteryStatus; icon: typeof RotateCcw }> = [
@@ -23,7 +23,7 @@ const statusOptions: Array<{ value: MasteryStatus; icon: typeof RotateCcw }> = [
 
 export function WordCard({ word, onStatusChange, onDelete }: WordCardProps) {
   return (
-    <article className="panel p-4">
+    <article className="soft-row p-4">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <h3 className="break-words text-xl font-black text-ink">{word.word}</h3>
@@ -33,7 +33,7 @@ export function WordCard({ word, onStatusChange, onDelete }: WordCardProps) {
       </div>
 
       {word.example ? (
-        <p className="mt-4 rounded-lg border border-line bg-wash p-3 text-sm leading-6 text-slate-700">
+        <p className="mt-4 rounded-lg bg-wash p-3 text-sm font-semibold leading-6 text-muted">
           {word.example}
         </p>
       ) : null}
@@ -57,10 +57,12 @@ export function WordCard({ word, onStatusChange, onDelete }: WordCardProps) {
         })}
         <button
           type="button"
-          className="ml-auto text-sm font-bold text-muted hover:text-coral"
+          className="icon-button ml-auto"
           onClick={() => onDelete(word.id)}
+          aria-label="Delete word"
+          title="Delete word"
         >
-          删除
+          <Trash2 size={17} aria-hidden="true" />
         </button>
       </div>
     </article>

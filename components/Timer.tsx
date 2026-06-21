@@ -48,11 +48,11 @@ export function Timer({ label, seconds }: TimerProps) {
   }, [remaining, seconds]);
 
   return (
-    <div className="rounded-lg border border-line bg-white p-4">
+    <div className="panel-white p-4">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <p className="text-sm font-black text-ink">{label}</p>
-          <p className="mt-1 font-mono text-3xl font-black tabular-nums text-sky">
+          <p className="text-sm font-black text-muted">{label}</p>
+          <p className="mt-1 font-mono text-3xl font-black tabular-nums text-ink">
             {formatTime(remaining)}
           </p>
         </div>
@@ -62,7 +62,7 @@ export function Timer({ label, seconds }: TimerProps) {
             className="icon-button"
             onClick={() => setRunning((value) => !value)}
             aria-label={running ? "Pause timer" : "Start timer"}
-            title={running ? "暂停" : "开始"}
+            title={running ? "Pause" : "Start"}
           >
             {running ? <Pause size={18} /> : <Play size={18} />}
           </button>
@@ -74,14 +74,14 @@ export function Timer({ label, seconds }: TimerProps) {
               setRunning(false);
             }}
             aria-label="Reset timer"
-            title="重置"
+            title="Reset"
           >
             <RotateCcw size={18} />
           </button>
         </div>
       </div>
-      <div className="mt-4 h-2 rounded-full bg-slate-100">
-        <div className="h-2 rounded-full bg-aqua" style={{ width: `${progress}%` }} />
+      <div className="mt-4 h-2 rounded-full bg-wash">
+        <div className="h-2 rounded-full bg-honey" style={{ width: `${progress}%` }} />
       </div>
     </div>
   );

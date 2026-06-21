@@ -16,10 +16,10 @@ const topics: WordTopic[] = [
 ];
 
 const statusLabels: Array<{ value: "all" | MasteryStatus; label: string }> = [
-  { value: "all", label: "全部" },
-  { value: "unlearned", label: "未掌握" },
-  { value: "fuzzy", label: "模糊" },
-  { value: "mastered", label: "已掌握" },
+  { value: "all", label: "All" },
+  { value: "unlearned", label: "New" },
+  { value: "fuzzy", label: "Review" },
+  { value: "mastered", label: "Mastered" },
 ];
 
 export default function VocabularyPage() {
@@ -55,6 +55,9 @@ export default function VocabularyPage() {
       return matchesSearch && matchesTopic && matchesStatus && matchesReview;
     });
   }, [reviewIds, search, statusFilter, topicFilter, words]);
+
+  const mastered = words.filter((item) => item.status === "mastered").length;
+  const reviewCount = words.filter((item) => item.status === "fuzzy").length;
 
   function addWord(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -93,23 +96,41 @@ export default function VocabularyPage() {
   }
 
   return (
-    <main className="shell py-6 md:py-8">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+    <main className="page-shell">
+      <header className="page-header">
         <div>
-          <p className="text-sm font-black uppercase text-sky">Vocabulary</p>
-          <h1 className="mt-1 text-3xl font-black text-ink">主题词库</h1>
+          <p className="eyebrow">Vocabulary</p>
+          <h1 className="page-title">Word bank</h1>
+          <p className="page-subtitle">Build topic vocabulary and review the uncertain words first.</p>
         </div>
-        <button type="button" className="btn btn-secondary" onClick={pickReviewWords}>
+        <button type="button" className="btn btn-primary" onClick={pickReviewWords}>
           <Shuffle size={18} aria-hidden="true" />
-          随机复习 10 个
+          Review 10
         </button>
-      </div>
+      </header>
 
-      <section className="mt-6 grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
+      <section className="mb-4 grid gap-4 sm:grid-cols-3">
+        <article className="metric">
+          <p className="metric-label">Total words</p>
+          <p className="metric-value">{words.length}</p>
+        </article>
+        <article className="metric">
+          <p className="metric-label">Mastered</p>
+          <p className="metric-value">{mastered}</p>
+        </article>
+        <article className="metric">
+          <p className="metric-label">Needs review</p>
+          <p className="metric-value">{reviewCount}</p>
+        </article>
+      </section>
+
+      <section className="grid gap-4 lg:grid-cols-[0.82fr_1.18fr]">
         <form className="panel p-5" onSubmit={addWord}>
-          <div className="grid gap-4 sm:grid-cols-2">
+          <p className="eyebrow">Add word</p>
+          <h2 className="mt-1 text-xl font-black text-ink">New vocabulary</h2>
+          <div className="mt-5 grid gap-4 sm:grid-cols-2">
             <label className="text-sm font-bold text-ink">
-              单词
+              Word
               <input
                 className="input mt-2"
                 value={word}
@@ -118,17 +139,17 @@ export default function VocabularyPage() {
               />
             </label>
             <label className="text-sm font-bold text-ink">
-              中文释义
+              Meaning
               <input
                 className="input mt-2"
                 value={meaning}
                 onChange={(event) => setMeaning(event.target.value)}
-                placeholder="证据"
+                placeholder="proof or information"
               />
             </label>
           </div>
           <label className="mt-4 block text-sm font-bold text-ink">
-            例句
+            Example
             <textarea
               className="input mt-2 min-h-28 resize-y"
               value={example}
@@ -138,7 +159,7 @@ export default function VocabularyPage() {
           </label>
           <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
             <label className="flex-1 text-sm font-bold text-ink">
-              主题
+              Topic
               <select
                 className="input mt-2"
                 value={topic}
@@ -149,9 +170,9 @@ export default function VocabularyPage() {
                 ))}
               </select>
             </label>
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-accent">
               <Plus size={18} aria-hidden="true" />
-              添加
+              Add
             </button>
           </div>
         </form>
@@ -159,7 +180,7 @@ export default function VocabularyPage() {
         <div className="panel p-5">
           <div className="grid gap-3 md:grid-cols-[1fr_160px_150px]">
             <label className="relative text-sm font-bold text-ink">
-              搜索
+              Search
               <Search className="pointer-events-none absolute bottom-3 left-3 text-muted" size={18} aria-hidden="true" />
               <input
                 className="input mt-2 pl-10"
@@ -169,20 +190,20 @@ export default function VocabularyPage() {
               />
             </label>
             <label className="text-sm font-bold text-ink">
-              主题
+              Topic
               <select
                 className="input mt-2"
                 value={topicFilter}
                 onChange={(event) => setTopicFilter(event.target.value as "all" | WordTopic)}
               >
-                <option value="all">全部</option>
+                <option value="all">All</option>
                 {topics.map((item) => (
                   <option key={item}>{item}</option>
                 ))}
               </select>
             </label>
             <label className="text-sm font-bold text-ink">
-              状态
+              Status
               <select
                 className="input mt-2"
                 value={statusFilter}
@@ -200,14 +221,14 @@ export default function VocabularyPage() {
           {reviewIds.length > 0 ? (
             <button
               type="button"
-              className="mt-4 text-sm font-bold text-sky hover:text-ink"
+              className="mt-4 text-sm font-black text-ink underline decoration-honey decoration-2 underline-offset-4"
               onClick={() => setReviewIds([])}
             >
-              查看全部单词
+              Show all words
             </button>
           ) : null}
 
-          <div className="mt-5 grid gap-4">
+          <div className="mt-5 grid gap-3">
             {filteredWords.length > 0 ? (
               filteredWords.map((item) => (
                 <WordCard
@@ -219,7 +240,7 @@ export default function VocabularyPage() {
               ))
             ) : (
               <div className="rounded-lg border border-dashed border-line bg-white p-8 text-center text-sm font-bold text-muted">
-                暂无单词
+                No words yet
               </div>
             )}
           </div>

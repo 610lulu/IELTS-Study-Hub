@@ -19,7 +19,7 @@ export const defaultPlan: StudyPlan = {
   targetBand: "6.5",
   examDate: "",
   dailyMinutes: 90,
-  weeklyGoal: "完成 2 篇写作、5 次口语、70 个单词复习",
+  weeklyGoal: "Finish 2 essays, 3 speaking practices, and 50 vocabulary reviews.",
 };
 
 export function todayKey(date = new Date()) {
@@ -55,28 +55,28 @@ export function getDefaultTasks(date = todayKey()): StudyTask[] {
   return [
     {
       id: `task-${date}-vocabulary`,
-      title: "复习 10 个高频单词",
+      title: "Review 10 high-frequency words",
       area: "Vocabulary",
       done: false,
       date,
     },
     {
       id: `task-${date}-writing`,
-      title: "完成 1 个 Task 2 段落",
+      title: "Write one Task 2 body paragraph",
       area: "Writing",
       done: false,
       date,
     },
     {
       id: `task-${date}-speaking`,
-      title: "完成 1 组 Part 2 口语练习",
+      title: "Complete one Part 2 speaking round",
       area: "Speaking",
       done: false,
       date,
     },
     {
       id: `task-${date}-reading`,
-      title: "阅读定位关键词 20 分钟",
+      title: "Practice keyword matching for 20 minutes",
       area: "Reading",
       done: false,
       date,

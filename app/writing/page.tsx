@@ -7,7 +7,7 @@ import { createId, loadEssays, STORAGE_KEYS, writeToStorage } from "@/lib/storag
 import type { WritingEssay } from "@/types";
 
 function formatDate(value: string) {
-  return new Intl.DateTimeFormat("zh-CN", {
+  return new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
     hour: "2-digit",
@@ -33,20 +33,38 @@ export default function WritingPage() {
     }, 0);
   }, [essays]);
 
+  const avgWords = essays.length ? Math.round(totalWords / essays.length) : 0;
+
   return (
-    <main className="shell py-6 md:py-8">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+    <main className="page-shell">
+      <header className="page-header">
         <div>
-          <p className="text-sm font-black uppercase text-sky">Writing</p>
-          <h1 className="mt-1 text-3xl font-black text-ink">写作记录</h1>
+          <p className="eyebrow">Writing</p>
+          <h1 className="page-title">Writing studio</h1>
+          <p className="page-subtitle">Save IELTS essays now and leave room for AI feedback later.</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           <span className="chip">{essays.length} essays</span>
           <span className="chip">{totalWords} words</span>
         </div>
-      </div>
+      </header>
 
-      <section className="mt-6 grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
+      <section className="mb-4 grid gap-4 sm:grid-cols-3">
+        <article className="metric">
+          <p className="metric-label">Total drafts</p>
+          <p className="metric-value">{essays.length}</p>
+        </article>
+        <article className="metric">
+          <p className="metric-label">Words written</p>
+          <p className="metric-value">{totalWords}</p>
+        </article>
+        <article className="metric">
+          <p className="metric-label">Average length</p>
+          <p className="metric-value">{avgWords}</p>
+        </article>
+      </section>
+
+      <section className="grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
         <WritingEditor
           onSave={(essay) => {
             persist([
@@ -63,18 +81,20 @@ export default function WritingPage() {
         <div className="panel p-5">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-black text-ink">历史作文</p>
-              <p className="mt-1 text-sm font-semibold text-muted">Task 1 / Task 2</p>
+              <p className="eyebrow">Archive</p>
+              <h2 className="mt-1 text-xl font-black text-ink">Essay history</h2>
             </div>
-            <FileText className="text-coral" size={24} aria-hidden="true" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-coral/15 text-coral">
+              <FileText size={20} aria-hidden="true" />
+            </div>
           </div>
 
-          <div className="mt-5 space-y-4">
+          <div className="mt-5 space-y-3">
             {essays.length > 0 ? (
               essays.map((essay) => {
                 const words = essay.content.trim().split(/\s+/).filter(Boolean).length;
                 return (
-                  <article key={essay.id} className="rounded-lg border border-line bg-white p-4">
+                  <article key={essay.id} className="soft-row p-4">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
                         <div className="flex flex-wrap gap-2">
@@ -88,15 +108,15 @@ export default function WritingPage() {
                       </div>
                       <button
                         type="button"
-                        className="icon-button shrink-0"
-                        title="删除"
+                        className="icon-button"
+                        title="Delete essay"
                         aria-label="Delete essay"
                         onClick={() => persist(essays.filter((item) => item.id !== essay.id))}
                       >
                         <Trash2 size={18} />
                       </button>
                     </div>
-                    <p className="mt-3 line-clamp-4 whitespace-pre-line text-sm leading-6 text-slate-700">
+                    <p className="mt-3 line-clamp-4 whitespace-pre-line text-sm font-semibold leading-6 text-muted">
                       {essay.content}
                     </p>
                     <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -106,7 +126,7 @@ export default function WritingPage() {
                       </span>
                       <button type="button" className="btn btn-secondary" disabled>
                         <Bot size={18} aria-hidden="true" />
-                        AI 批改
+                        AI feedback
                       </button>
                     </div>
                   </article>
@@ -114,7 +134,7 @@ export default function WritingPage() {
               })
             ) : (
               <div className="rounded-lg border border-dashed border-line bg-white p-8 text-center text-sm font-bold text-muted">
-                暂无作文
+                No essays yet
               </div>
             )}
           </div>
